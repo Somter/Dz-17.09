@@ -12,7 +12,7 @@ public:
 	bool MysturStr(const char* substr);
 	int MyChr(char c) const;
 	int MyStrLen() const;	
-	void MyDelCat(MyString& b);		
+	void MyDelCat(MyString& b);		 
 	void MyDelCht(char c);
 	int MyStrCmp(MyString& b);	
 

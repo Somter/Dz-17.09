@@ -3,7 +3,7 @@ class MyString
 {
 private:
 	char* str;
-	int lenght;
+	int length;
 public:
 	MyString();	
 	MyString(const char* str);	
@@ -16,7 +16,14 @@ public:
 	void MyDelCht(char c);
 	int MyStrCmp(MyString& b);	
 
-	void Print() const;				
-	//~MyString();		
+	char& operator[](const int index);	
+	void operator() ();	
+	//MyString& operator=(const MyString& Str);		
+
+	char* GetString() const;			
+	void SetString(char* str);				
+
+	void Print() const;							
+	//~MyString();			
 };	
 

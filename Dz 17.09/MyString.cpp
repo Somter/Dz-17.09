@@ -2,41 +2,44 @@
 
 #include "MyString.h"
 #include <iostream>	
+#include <cstring>	
 using namespace std;		
 
 static int objectCount;
 
 MyString::MyString()
 {
-	lenght = 80;
-	str = new char [lenght];
+	length = 80;
+	str = new char [length];	
 	str[0] = '\0'; 
 	objectCount++;
 }
-
-
-MyString::MyString(const char* userInput) 
+MyString::MyString(const char* Input) 
 {
-	if (str != nullptr)
+
+	if (str != nullptr)	
 	{
-		delete[] str;
-	}	
-	char* temp = new char[strlen(userInput) + 1];
-	strcpy(temp, userInput);
-	str = temp;		
-	objectCount++;	
+		delete[] str;	
+	}
+	str = nullptr;
+	char* temp = new char[strlen(Input) + 1];
+	strcpy(temp, Input);	
+	str = temp;
+	objectCount++;
 }
 
-MyString::MyString(const char* userInput, int size)		
-{			
-	char* newstr = new char[size + 1];
-	std::cout << "Enter string: ";
-	std::cin.getline(newstr, size + 1);
-	if (str != nullptr) {
-		delete[] str;
-	} 
-	str = newstr; 
-	lenght = size;;
+MyString::MyString(const char* Input, int size)		
+{
+	if (str != nullptr)	
+	{
+		delete[] str;	
+	}	
+	str = nullptr; 
+	char* newstr = new char[size + 1];		
+	cout << "Enter string: ";	
+	cin.getline(newstr, size + 1);		
+	str = newstr;	
+	length = size;	
 	objectCount++;	
 }
 
@@ -45,9 +48,9 @@ void MyString::MyStrcpy(MyString& obj)
 	if (str != nullptr) {
 		delete[] str;
 	}
-	lenght = obj.lenght;
-	str = new char[lenght + 1];
-	strcpy_s(str, lenght + 1, obj.str);
+	length = obj.length;
+	str = new char[length + 1];
+	strcpy_s(str, length + 1, obj.str);
 }
 
 bool MyString::MysturStr(const char* substr)
@@ -92,7 +95,7 @@ void MyString::MyDelCht(char c)
 		}
 	}
 	str[newLen] = '\0';
-	lenght = newLen;
+	length = newLen;
 }
 
 int MyString::MyStrCmp(MyString& b)
@@ -110,7 +113,42 @@ int MyString::MyStrCmp(MyString& b)
 	}	
 }
 
-void MyString::Print() const	
+char& MyString::operator[](const int index) {		
+	if (index >= 0 && index < length) {
+		return str[index];	
+	}	
+	return str[0];
+}
+void MyString::operator() ()
+{
+	if (str != nullptr)
+	{
+		delete[] str;
+	}
+	str = new char[length];
+	cin.getline(str, length);
+}
+//MyString& MyString::operator=(const MyString& Str)
+//{
+//	if (this != &Str)
+//	{
+//		delete[] str;
+//
+//		str = new char[Str.length + 1];
+//		length = Str.length;
+//		strcpy_s(str, length + 1, Str.str);
+//	}
+//	return *this;
+//}	
+char* MyString::GetString()	const	
+{
+	return str;			
+}
+void MyString::SetString(char* str)
+{
+	this->str = str;
+}
+void MyString::Print() const		
 {
 	cout << "String: " << str << endl;		
 }

@@ -1,5 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS	
-
 #include "MyString.h"
 #include <iostream>	
 #include <cstring>	
@@ -22,10 +20,10 @@ MyString::MyString(const char* Input)
 		delete[] str;	
 	}
 	str = nullptr;
-	char* temp = new char[strlen(Input) + 1];
-	strcpy(temp, Input);	
-	str = temp;
-	objectCount++;
+	char* temp = new char[strlen(Input) + 1];		
+	strcpy_s(temp, strlen(Input) + 1, Input);			
+	str = temp;		
+	objectCount++;		
 }
 
 MyString::MyString(const char* Input, int size)		
@@ -42,6 +40,39 @@ MyString::MyString(const char* Input, int size)
 	length = size;	
 	objectCount++;	
 }
+MyString::MyString(const MyString& obj)	
+{
+	if (obj.str == nullptr) {
+		length = 0;
+		str = nullptr;
+	}
+	else {
+		length = obj.length;
+		str = new char[length];	
+		for (int i = 0; i < length; i++) {	
+			str[i] = obj.str[i];
+		}
+	}
+	cout << "Copy constructor\n";
+}	
+//
+//MyString(const MyString& obj) // 1
+//{
+//	lenght = obj.lenght;
+//	ptr = new int[size];
+//	for (int i = 0; i < size; i++)
+//	{
+//		ptr[i] = obj.ptr[i];
+//	}
+//	cout << "Copy constructor\n";
+//}
+MyString::MyString(MyString&& obj)
+{	
+	length = obj.length;	
+	obj.length = 0;				
+	str = obj.str;	
+	obj.str = nullptr;		
+}	
 
 void MyString::MyStrcpy(MyString& obj)
 {
@@ -80,7 +111,7 @@ int MyString::MyStrLen() const
 
 void MyString::MyDelCat(MyString& b)	
 {
-	strcat(str, b.str);	
+	strcat_s(str, strlen(str) + strlen(b.str) + 1, b.str);	
 }
 
 void MyString::MyDelCht(char c)
@@ -112,7 +143,14 @@ int MyString::MyStrCmp(MyString& b)
 		return 0; 
 	}	
 }
-
+MyString& MyString::operator=(MyString&& obj)
+{
+	this->str = obj.str;	
+	obj.str = nullptr;	
+	this->length = obj.length;	
+	obj.length = 0;	
+	return *this;	
+}
 char& MyString::operator[](const int index) {		
 	if (index >= 0 && index < length) {
 		return str[index];	
@@ -127,19 +165,24 @@ void MyString::operator() ()
 	}
 	str = new char[length];
 	cin.getline(str, length);
-}
-//MyString& MyString::operator=(const MyString& Str)
-//{
-//	if (this != &Str)
-//	{
-//		delete[] str;
-//
-//		str = new char[Str.length + 1];
-//		length = Str.length;
-//		strcpy_s(str, length + 1, Str.str);
-//	}
-//	return *this;
-//}	
+}/*
+MyString& MyString::operator=(const MyString& Str)
+{
+	if (this != &Str)
+	{
+		delete[] str;
+
+		str = new char[length];
+		length = Str.length;
+		for (int i = 0; i < length; i++)	
+		{
+			str[i] = Str.str[i];		
+		}	
+		str[length-1] = '\0';	
+	}
+	return *this;
+}*/
+
 char* MyString::GetString()	const	
 {
 	return str;			
@@ -150,16 +193,14 @@ void MyString::SetString(char* str)
 }
 void MyString::Print() const		
 {
-	cout << "String: " << str << endl;		
+	cout << "String: " << str << endl;				
 }
-//MyString::~MyString()
-//{
-//	cout << "Destructor...\n";	
-//	if (str != nullptr)		
-//	{
-//		delete[] str;	
-//	}
-//	objectCount--;	
-//}
-
-
+MyString::~MyString()	
+{
+	cout << "Destructor...\n";		
+	if (str != nullptr)			
+	{	
+		delete[] str;			
+	}
+	objectCount--;		
+}

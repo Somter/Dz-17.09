@@ -82,46 +82,67 @@ MyString operator+(int number, const MyString& Str1)
     MyString rezult(result);    
     delete[] result;    
     return rezult;  
-}/*
-MyString& operator++(MyString& Str1)
+}
+
+MyString& operator++(MyString& Str1)   
 {
-    const int SIZE = strlen(Str1.GetString());  
-    char* newString = new char[SIZE + 2]; 
+    const int SIZE = strlen(Str1.GetString());
+    char* newString = new char[SIZE + 2];
 
     strcpy_s(newString, SIZE + 2, Str1.GetString());
 
     newString[SIZE] = '$';
-    newString[SIZE + 1] = '\0';  
+    newString[SIZE + 1] = '\0';
 
     delete[] Str1.GetString();
     Str1.SetString(newString);
 
     return Str1;
-}*/
+}
+    
+MyString& operator++(MyString& Str1, int)   
+{
+    MyString temp(Str1);  
+    const int SIZE = strlen(Str1.GetString());
+    char* newString = new char[SIZE + 2];
+
+    newString[0] = '$';
+    strcpy_s(newString + 1, SIZE + 1, Str1.GetString());
+
+    delete[] Str1.GetString();
+    Str1.SetString(newString);
+
+    return temp;
+}
 ostream& operator<<(ostream& os, const MyString& obj)   
 {
     os << "#1 ostream& operator<<(ostream& os, const MyString& obj)" << endl;
-    os << obj.GetString() << endl;
+    os << "Your String: " << obj.GetString() << endl;   
     return os;   
 }
 istream& operator>>(istream& is, MyString& Str)
 {
+    if (Str.GetString() == nullptr)
+    {
+        delete[] Str.GetString();
+    }
     cout << "#2 istream& operator>>(istream& is, Foo& obj)" << endl;
-    char* a = new char[100];          
-    cin >> a;   
-    Str.SetString(a);               
-    delete[] a; 
-    /*cout << "m_data = ";
-    cin >> obj.m_data;
-
-    cout << "m_character = ";
-    is >> obj.m_character;*/
-
-    return is;
+    cout << "Enter String: ";   
+    char* a = new char[100];
+    cin >> a;
+    Str.SetString(a);
+    delete[] a;
+    return is;  
 }
+
+MyString ReturnValue(MyString Str)
+{
+    return Str;
+}
+
 int main()
 {
-    MyString String("Hello", 80); 
+    MyString String("Hello", 80);   
     String.Print();  
     MyString String2(String);
     cout << "#1 Str copy: " << endl;
@@ -179,7 +200,7 @@ int main()
 
     cout << "#4 String + '!':\n\n"; 
     MyString String3 = String2 + '!';         
-    String3.Print(); 
+    String3.Print();    
 
    cout << "#6 '!' + String:\n";     
    String3 = '!' + String2;     
@@ -193,25 +214,35 @@ int main()
    String3 = 10 + String2;  
    String3.Print(); 
 
-   cout << "Dz3 \n";    
-   cout << "\n\n--------------------\n\n";      
-   cout << String2 << '\n'; 
-   cin >> String2;  
+   cout << "#9 ++Operator: \n"; 
+   MyString StringPlusElem("Hello");
+   ++StringPlusElem;     
+   StringPlusElem.Print();  
 
-  /* cout << "#3 ";
-   String3 = String2;  
-   String3.Print();*/ 
-   /*cin >> obj1; 
-   cout << obj1;*/
+   cout << "#10 Operator++: \n";
+   MyString PlusElemString("Hello");    
+   PlusElemString++;
+   PlusElemString.Print();  
+        
+   cout << "Dz 3: \n";        
+   cout << "\n--------------------\n";      
+   cout << String2 << '\n';     
+   cin >> String2;      
 
+   /*cout << "#3 MyString& MyString::operator=(const MyString& Str)";
+   String3 = String2;   
+   String3.Print();*/
 
-  /* String2 = String;         
-   String2.Print(); */
+   cout << "Dz 3: ";
+   cout << "\n-------------------" << endl; 
+   cout << "1# Move: " << endl;    
+   MyString String4 = move(String);    
+   String4.Print(); 
     
-
-/*
-   String3 = String2++; 
-   String3.Print();  */   
+   cout << "2# Move operator: " << endl;                    
+   MyString String5 = ReturnValue(String4); 
+   cout << "3# Operator = (MyString&& obj): \n";   
+   String5.Print();     
     
 }
 
